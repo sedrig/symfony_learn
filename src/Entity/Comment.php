@@ -2,16 +2,17 @@
 
 namespace App\Entity;
 
-use App\Repository\PostRepository;
+use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=PostRepository::class)
+ * @ORM\Entity(repositoryClass=CommentRepository::class)
  */
-class Post
+class Comment
 {
     private const PUBLISHED=1;
     private const DRAFT=0;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -20,29 +21,19 @@ class Post
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=1000)
-     */
-    private $title;
-
-    /**
      * @ORM\Column(type="text")
      */
     private $content;
 
     /**
-     * @ORM\Column(type="string", length=500, nullable=true)
+     * @ORM\ManyToOne(targetEntity=Post::class)
      */
-    private $image;
+    private $post;
 
     /**
      * @ORM\Column(type="datetime")
      */
     private $created_at;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $updated_at;
 
     /**
      * @ORM\Column(type="boolean")
@@ -52,18 +43,6 @@ class Post
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
     }
 
     public function getContent(): ?string
@@ -78,14 +57,14 @@ class Post
         return $this;
     }
 
-    public function getImage(): ?string
+    public function getPost(): ?Post
     {
-        return $this->image;
+        return $this->post;
     }
 
-    public function setImage(?string $image): self
+    public function setPost(?Post $post): self
     {
-        $this->image = $image;
+        $this->post = $post;
 
         return $this;
     }
@@ -95,11 +74,6 @@ class Post
         return $this->created_at;
     }
 
-    public function setCreatedAtValue()
-    {
-        $this->created_at=new \DateTime();
-    }
-
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
@@ -107,21 +81,9 @@ class Post
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function setCreatedAtValue()
     {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAtValue()
-    {
-        $this->updated_at=new \DateTime();
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updated_at): self
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
+        $this->created_at=new \DateTime();
     }
 
     public function getIsPublished(): ?bool
